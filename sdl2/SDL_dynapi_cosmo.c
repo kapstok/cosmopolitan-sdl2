@@ -43,6 +43,8 @@
 #include "SDL_syswm.h"
 #include "SDL_vulkan.h"
 
+#include <stdlib.h>
+
 static char cosmo_error[1024];
 
 /* all the procedures listed here necessarily rely on callbacks. mask them while we dont have a

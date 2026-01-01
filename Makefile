@@ -1,7 +1,7 @@
-CC = cosmocc
-CXX = cosmoc++
-AR = cosmoar
-ZIPOBJ = zipobj
+CC = /cosmocc/bin/cosmocc
+CXX = /cosmocc/bin/cosmoc++
+AR = /cosmocc/bin/cosmoar
+ZIPOBJ = /cosmocc/bin/zipobj
 
 CFLAGS = -Isdl2 -g -DIMGUI_IMPL_OPENGL_LOADER_CUSTOM -Io/gl3w
 CXXFLAGS = $(CFLAGS)
@@ -79,24 +79,24 @@ $(SDL2_DLL_ZIP):
 	@mkdir -p o
 	curl -sL -o $@ $(SDL2_DLL_ZIP_URL)
 $(SDL2_DLL): $(SDL2_DLL_ZIP)
-	unzip -q -DD -o $< SDL2.dll -d o
+	unzip -q -o $< SDL2.dll -d o
 
 $(SDL2_DYLIB_DMG):
 	@mkdir -p o
 	curl -sL -o $@ $(SDL2_DYLIB_DMG_URL)
 $(SDL2_DYLIB): $(SDL2_DYLIB_DMG)
 	7z e $< SDL2/SDL2.framework/Versions/A/SDL2 -oo
-	mv o/SDL2 o/libSDL2.dylib
+	mv -v o/SDL2 o/libSDL2.dylib
 	touch o/libSDL2.dylib
 
 o/SDL2.dll.zip.o: o/SDL2.dll
 	@mkdir -p $(dir $@)/.aarch64
-	@echo '$(SDL2_DLL_HASH)  o/SDL2.dll' | sha256sum --check --quiet -
+	@echo '$(SDL2_DLL_HASH)  o/SDL2.dll' | sha256sum -c
 	$(ZIPOBJ) $(ZIPOBJ_FLAGS) -a x86_64 -o $@ -C 1 $<
 	$(ZIPOBJ) $(ZIPOBJ_FLAGS) -a aarch64 -o $(dir $@)/.aarch64/$(notdir $@) -C 1 $<
 o/libSDL2.dylib.zip.o: o/libSDL2.dylib
 	@mkdir -p $(dir $@)/.aarch64
-	@echo '$(SDL2_DYLIB_HASH)  o/libSDL2.dylib' | sha256sum --check --quiet -
+	@echo '$(SDL2_DYLIB_HASH)  o/libSDL2.dylib' | sha256sum -c
 	$(ZIPOBJ) $(ZIPOBJ_FLAGS) -a x86_64 -o $@ -C 1 $<
 	$(ZIPOBJ) $(ZIPOBJ_FLAGS) -a aarch64 -o $(dir $@)/.aarch64/$(notdir $@) -C 1 $<
 
